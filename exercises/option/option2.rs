@@ -22,7 +22,7 @@ fn main() {
         if integer.is_some() {
             println!("current value: {}", integer.unwrap().unwrap());
         } else {
-            break
+            break;
         }
     }
 }
