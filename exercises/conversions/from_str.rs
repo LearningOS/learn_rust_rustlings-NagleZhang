@@ -26,7 +26,11 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
+impl ParsePersonError {
+    fn parse_int(e: ParseIntError) -> Self {
+        ParsePersonError::ParseInt(e)
+    }
+}
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -41,6 +45,27 @@ enum ParsePersonError {
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        let person: Vec<&str>  = s.split(",").collect();
+
+        let count = person.len();
+        if count == 1  && person[0] == "" {
+            return Err(ParsePersonError::Empty);
+        } else if count != 2  {
+            return Err(ParsePersonError::BadLen);
+        }
+
+        let name = person[0];
+        let age = person[1];
+        if name == ""  {
+            return Err(ParsePersonError::NoName);
+        }
+
+        let age_i: usize = age.parse().map_err(ParsePersonError::parse_int)?;
+
+        Ok(Person {
+            name: String::from(name),
+            age: age_i,
+        })
     }
 }
 
